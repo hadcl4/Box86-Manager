@@ -1,0 +1,111 @@
+#!/bin/bash
+echo "Box86-Manager V1.0.0"
+echo "What would you like to do?"
+echo "1. Install Box86"
+echo "2. Install Box64"
+echo "3. Update Box86"
+echo "4. Update Box64"
+echo "5. Run Box86 Test"
+echo "6. Run Box64 Test"
+echo "7. Add ARMHF architecture (64-bit only)"
+echo "8. Dependency Installation (Box86)"
+echo "9. Dependency Installation (Box64)"
+read -p "Which option [1-9]: " managermode
+echo "Running option number "${managermode}"."
+if [[ $managermode == "1" ]] ;then
+command -v box86 || BOX_INSTALL="0"
+if [[ $BOX_INSTALL=="0" ]] ;then
+echo "Box86 is already installed, so can't install!"
+else
+cd ~
+read -p "Please enter in a valid platform name (e.g. RPI4 or RK3399), or else cmake will fail: " PLATFORM
+git clone https://github.com/ptitSeb/box86
+cd box86
+mkdir build
+cd build
+cmake .. -D${PLATFORM}=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
+read -p "How many cores do you want make to use (don't enter in any more than what you have!): " CORES
+make -j${CORES}
+sudo make install
+sudo systemctl restart systemd-binfmt
+fi
+fi
+if [[ $managermode == "2" ]] ;then
+command -v box64 || BOX_INSTALL="0"
+if [[ $BOX_INSTALL=="0" ]] ;then
+echo "Box64 is already installed, so can't install!"
+else
+cd ~
+read -p "Please enter in a valid platform name (e.g. RPI4ARM64 or RK3399), or else cmake will fail: " PLATFORM
+git clone https://github.com/ptitSeb/box64
+cd box64
+mkdir build
+cd build
+cmake .. -D${PLATFORM}=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
+read -p "How many cores do you want make to use (don't enter in any more than what you have!): " CORES
+make -j${CORES}
+sudo make install
+sudo systemctl restart systemd-binfmt
+fi
+fi
+if [[ $managermode == "3" ]] ;then
+command -v box86 || BOX_INSTALL="0"
+if [[ $BOX_INSTALL="0" ]] ;then
+echo "Please install Box86 before updating."
+else
+cd ~/box86/build
+git pull
+read -p "How many cores do you want make to use (don't enter in any more than what you have!): " CORES
+make -j${CORES}
+sudo make install
+fi
+fi
+if [[ $managermode == "4" ]] ;then
+command -v box64 || BOX_INSTALL="0"
+if [[ $BOX_INSTALL="0" ]] ;then
+echo "Please install Box64 before updating."
+else
+cd ~/box64/build
+git pull
+read -p "How many cores do you want make to use (don't enter in any more than what you have!): " CORES
+make -j${CORES}
+sudo make install
+fi
+fi
+if [[ $managermode == "5" ]] ;then
+command -v box86 || BOX_INSTALL="0"
+if [[ $BOX_INSTALL == "0" ]] ;then
+echo "Box86 isn't installed, so can't test!"
+else
+cd ~/box86/build
+ctest
+fi
+fi
+if [[ $managermode == "6" ]] ;then
+command -v box64 || BOX_INSTALL="0"
+if [[ $BOX_INSTALL == "0" ]] ;then
+echo "Box64 isn't installed, so can't test!"
+else
+cd ~/box64/build
+ctest
+fi
+fi
+if [[ $managermode == "7" ]] ;then
+cpuarch=$(dpkg --print-architecture)
+echo $cpuarch
+if [[ $cpuarch == "arm64" ]] ;then
+echo "Adding CPU arch to DPKG..."
+sudo dpkg --add-architecture armhf
+echo "Finished"
+else
+echo "You either are on an ARMHF system already or on a non-ARM architecture."
+fi
+fi
+if [[ $managermode == "8" ]] ;then
+echo "Installing dependencies..."
+sudo apt install cmake:armhf git make:armhf gcc:armhf build-essential:armhf
+fi
+if [[ $managermode == "9" ]] ;then
+echo "Installing dependencies..."
+sudo apt install cmake git make gcc build-essential
+fi

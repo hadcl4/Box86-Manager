@@ -1,0 +1,12 @@
+#!/bin/bash
+echo "Box86-Manager Setup"
+#read -p "Please input your OS' bitness [32/64]: " bitness
+#if [[ $bitness == "32" ]] ;then
+#sudo apt install -y build-essential git cmake
+#fi
+#if [[ $bitness == "64" ]] ;then
+#sudo apt install -y build-essiental:armhf git cmake:armhf
+#fi
+chmod +x box86-manager
+sudo cp box86-manager /usr/local/bin/box86-manager
+echo "Install complete!"
