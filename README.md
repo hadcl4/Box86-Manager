@@ -3,7 +3,7 @@
 *CLI tool for managing Box86 and Box64*
 
 ## Install
-The only requirement for running `box86-manager` is `bash`. Most Linux systems use this, so you most likely won't need to install anything prior.
+The only requirement for running `box86-manager` is `bash`. Most Linux systems use this, so you most likely won't need to install anything prior. Also make sure you're using a <b>Debian or Ubuntu</b> based distro.
 
 First clone the repo (using git or the .ZIP, it doesn't matter), and run the following commands:
 
