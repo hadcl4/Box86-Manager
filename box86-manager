@@ -61,15 +61,15 @@ sudo make install
 fi
 fi
 if [[ $managermode == "4" ]] ;then
-command -v box64 || BOX_INSTALL="0"
-if [[ $BOX_INSTALL="0" ]] ;then
-echo "Please install Box64 before updating."
-else
+BOX_INSTALL=$(command -v box64)
+if [[ $BOX_INSTALL="/usr/local/bin/box64" ]] ;then
 cd ~/box64/build
 git pull
 read -p "How many cores do you want make to use (don't enter in any more than what you have!): " CORES
 make -j${CORES}
 sudo make install
+else
+echo "Please install Box64 before updating."
 fi
 fi
 if [[ $managermode == "5" ]] ;then
