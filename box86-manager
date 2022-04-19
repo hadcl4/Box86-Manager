@@ -49,15 +49,15 @@ sudo systemctl restart systemd-binfmt
 fi
 fi
 if [[ $managermode == "3" ]] ;then
-command -v box86 || BOX_INSTALL="0"
-if [[ $BOX_INSTALL="0" ]] ;then
-echo "Please install Box86 before updating."
-else
+BOX_INSTALL=$(command -v box86)
+if [[ $BOX_INSTALL="/usr/local/bin/box86" ]] ;then
 cd ~/box86/build
 git pull
 read -p "How many cores do you want make to use (don't enter in any more than what you have!): " CORES
 make -j${CORES}
 sudo make install
+else
+echo "Please install Box86 before updating."
 fi
 fi
 if [[ $managermode == "4" ]] ;then
